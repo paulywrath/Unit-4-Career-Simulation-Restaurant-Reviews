@@ -1,10 +1,11 @@
 const client = require('./client.cjs');
 const { createRestaurant } = require('./restaurants.cjs');
 const { createUser } = require('./users.cjs');
+const { createReview } = require('./reviews.cjs');
 
 const dropTables = async() => {
   try {
-    await client.query(`DROP TABLE IF EXISTS restaurants, users, reviews;`)
+    await client.query(`DROP TABLE IF EXISTS reviews, restaurants, users;`)
   } catch (error) {
     console.log(error);
   }
@@ -13,27 +14,28 @@ const dropTables = async() => {
 const createTables = async() => {
   try {
     await client.query(`
+      
+      CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(30) NOT NULL UNIQUE,
+        password VARCHAR(50) NOT NULL
+        );
+
+      CREATE TABLE restaurants (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(30) NOT NULL,
+        cuisine_type VARCHAR(30) NOT NULL
+        );
+          
       CREATE TABLE reviews (
         id SERIAL PRIMARY KEY,
         score SMALLINT NOT NULL,
         review_text TEXT,
         created_at DATE DEFAULT CURRENT_DATE NOT NULL,
         edited_at DATE,
-        user_id_and_restaurant_id INTEGER NOT NULL UNIQUE
-      );
-
-      CREATE TABLE restaurants (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(30) NOT NULL,
-        cuisine_type VARCHAR(30) NOT NULL,
-        review_id INTEGER REFERENCES reviews(id)
-      );
-
-      CREATE TABLE users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(30) NOT NULL UNIQUE,
-        password VARCHAR(50) NOT NULL,
-        review_id INTEGER REFERENCES reviews(id)
+        user_id INTEGER REFERENCES users(id),
+        restaurant_id INTEGER REFERENCES restaurants(id),
+        UNIQUE (user_id, restaurant_id)
       );
     `)
   } catch (error) {
@@ -61,6 +63,12 @@ const syncAndSeed = async() => {
   await createUser(`user1`, `password1`);
   await createUser(`user2`, `password1`);
   console.log(`created users`);
+
+  await createReview(5, null, 1, 1);
+  await createReview(5, null, 2, 1);
+  await createReview(5, `Great!`, 2, 2);
+  await createReview(5, `Great!`, 2, 3);
+  console.log(`created reviews`);
 
   await client.end();
   console.log(`disconnected`);
