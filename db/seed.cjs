@@ -1,5 +1,6 @@
 const client = require('./client.cjs');
 const { createRestaurant } = require('./restaurants.cjs');
+const { createUser } = require('./users.cjs');
 
 const dropTables = async() => {
   try {
@@ -56,6 +57,10 @@ const syncAndSeed = async() => {
   await createRestaurant(`Akara House`, `Nigerian`);
   await createRestaurant(`Brooklyn Pizza Crew`, `Pizzeria`);
   console.log(`created restaurants`);
+
+  await createUser(`user1`, `password1`);
+  await createUser(`user2`, `password1`);
+  console.log(`created users`);
 
   await client.end();
   console.log(`disconnected`);
