@@ -2,7 +2,7 @@ const client = require('./client.cjs');
 
 const dropTables = async() => {
   try {
-    await client.query(`DROP TABLE IF EXISTS restaurants;`)
+    await client.query(`DROP TABLE IF EXISTS restaurants, users, reviews;`)
   } catch (error) {
     console.log(error);
   }
@@ -11,10 +11,27 @@ const dropTables = async() => {
 const createTables = async() => {
   try {
     await client.query(`
+      CREATE TABLE reviews (
+        id SERIAL PRIMARY KEY,
+        score SMALLINT NOT NULL,
+        review_text TEXT,
+        created_at DATE DEFAULT CURRENT_DATE NOT NULL,
+        edited_at DATE,
+        user_id_and_restaurant_id INTEGER NOT NULL UNIQUE
+      );
+
       CREATE TABLE restaurants (
         id SERIAL PRIMARY KEY,
         name VARCHAR(30) NOT NULL,
-        cuisine_type VARCHAR(30) NOT NULL 
+        cuisine_type VARCHAR(30) NOT NULL,
+        review_id INTEGER REFERENCES reviews(id)
+      );
+
+      CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(30) NOT NULL UNIQUE,
+        password VARCHAR(50) NOT NULL,
+        review_id INTEGER REFERENCES reviews(id)
       );
     `)
   } catch (error) {
