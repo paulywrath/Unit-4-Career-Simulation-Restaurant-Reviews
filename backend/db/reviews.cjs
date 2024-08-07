@@ -11,4 +11,16 @@ const createReview = async(score, review_text, user_id, restaurant_id) => {
   }
 }
 
-module.exports = { createReview }
+const getReviewsForRestaurant = async(restaurant_id) => {
+  try {
+    const { rows } = await client.query(`
+        SELECT score, review_text FROM reviews 
+        WHERE restaurant_id=${restaurant_id};
+      `)
+    return rows;
+  } catch (error) {
+    return(error);
+  }
+}
+
+module.exports = { createReview, getReviewsForRestaurant }

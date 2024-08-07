@@ -20,4 +20,13 @@ const getAllRestaurants = async() => {
   }
 }
 
-module.exports = { createRestaurant, getAllRestaurants }
+const getSpecificRestaurant = async(id) => {
+  try {
+    const { rows: [restaurant] } = await client.query(`SELECT name, cuisine_type FROM restaurants WHERE id=${id};`)
+    return restaurant;
+  } catch (error) {
+    return(error);
+  }
+}
+
+module.exports = { createRestaurant, getAllRestaurants, getSpecificRestaurant }
