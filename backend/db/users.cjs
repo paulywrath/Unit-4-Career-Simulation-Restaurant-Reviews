@@ -25,7 +25,7 @@ const getUser = async(username, password) => {
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 
     if(user && isPasswordMatch) {
-      const assignedToken = await jwt.sign({ userID: user.id }, `illnevertell`)
+      const assignedToken = await jwt.sign({ userID: user.id }, process.env.JWT_SECRET);
       return assignedToken;
     } else {
       const error = new Error(`bad credentials`);

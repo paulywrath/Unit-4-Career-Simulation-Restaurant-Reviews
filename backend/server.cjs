@@ -5,6 +5,8 @@ const { getAllRestaurants, getSpecificRestaurant } = require('./db/restaurants.c
 const { getReviewsForRestaurant, getAvgScoreForRestaurant } = require('./db/reviews.cjs');
 const { getUser } = require('./db/users.cjs');
 
+require('dotenv').config();
+
 client.connect();
 app.use(express.json());
 
