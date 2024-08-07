@@ -1,5 +1,6 @@
 const client = require('./client.cjs');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const createUser = async(username, password) => {
   const encryptedPassword = await bcrypt.hash(password, 10);
@@ -24,7 +25,8 @@ const getUser = async(username, password) => {
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 
     if(user && isPasswordMatch) {
-      return (`yes, you can log in`);
+      const assignedToken = await jwt.sign({ userID: user.id }, `illnevertell`)
+      return assignedToken;
     } else {
       const error = new Error(`bad credentials`);
       error.status = 401;

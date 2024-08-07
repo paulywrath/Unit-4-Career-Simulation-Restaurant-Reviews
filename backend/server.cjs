@@ -36,8 +36,8 @@ app.get('/api/v1/restaurants/:id', async(req, res, next) => {
 app.post('/api/v1/login', async(req, res, next) => {
   try {
     const { username, password } = req.body;
-    const signedIn = await getUser(username, password);
-    res.send(signedIn);
+    const assignedToken = await getUser(username, password);
+    res.send(assignedToken);
   } catch (error) {
     next(error);
   }
