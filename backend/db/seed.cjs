@@ -65,9 +65,10 @@ const syncAndSeed = async() => {
   console.log(`created users`);
 
   await createReview(5, null, 1, 1);
-  await createReview(5, null, 2, 1);
+  await createReview(1, null, 2, 1);
   await createReview(5, `Great!`, 2, 2);
   await createReview(5, `Great!`, 2, 3);
+  await createReview(4, `Good.`, 1, 3);
   console.log(`created reviews`);
 
   await client.end();

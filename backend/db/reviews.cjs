@@ -23,4 +23,18 @@ const getReviewsForRestaurant = async(restaurant_id) => {
   }
 }
 
-module.exports = { createReview, getReviewsForRestaurant }
+const getAvgScoreForRestaurant = async(restaurant_id) => {
+  try {
+    const { rows } = await client.query(`SELECT score FROM reviews WHERE restaurant_id=${restaurant_id};`)
+    
+    const scoreTotal = rows.reduce((accumulator, currentScore) => {
+      return accumulator += currentScore.score;
+    }, 0)
+
+    return scoreTotal / rows.length;
+  } catch (error) {
+    return(error);
+  }
+}
+
+module.exports = { createReview, getReviewsForRestaurant, getAvgScoreForRestaurant }
