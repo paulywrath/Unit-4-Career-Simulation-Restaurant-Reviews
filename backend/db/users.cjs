@@ -14,4 +14,26 @@ const createUser = async(username, password) => {
   }
 }
 
-module.exports = { createUser }
+const getUser = async(username, password) => {
+  try {
+    const { rows: [ user ] } = await client.query(`
+      SELECT * FROM users 
+      WHERE username='${username}';
+    `)
+    
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if(user && isPasswordMatch) {
+      return (`yes, you can log in`);
+    } else {
+      const error = new Error(`bad credentials`);
+      error.status = 401;
+      throw error;
+    }
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { createUser, getUser }
