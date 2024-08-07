@@ -26,7 +26,12 @@ const getReviewsForRestaurant = async(restaurant_id) => {
 const getAvgScoreForRestaurant = async(restaurant_id) => {
   try {
     const { rows } = await client.query(`SELECT score FROM reviews WHERE restaurant_id=${restaurant_id};`)
-    return rows;
+    
+    const scoreTotal = rows.reduce((accumulator, currentScore) => {
+      return accumulator += currentScore.score;
+    }, 0)
+
+    return scoreTotal / rows.length;
   } catch (error) {
     return(error);
   }
