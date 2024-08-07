@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const { getAllRestaurants, getSpecificRestaurant } = require('./db/restaurants.cjs');
 const { getReviewsForRestaurant, getAvgScoreForRestaurant } = require('./db/reviews.cjs');
-const { getUser } = require('./db/users.cjs');
+const { getUser, createUser } = require('./db/users.cjs');
 
 require('dotenv').config();
 
@@ -39,6 +39,16 @@ app.post('/api/v1/login', async(req, res, next) => {
   try {
     const { username, password } = req.body;
     const assignedToken = await getUser(username, password);
+    res.send(assignedToken);
+  } catch (error) {
+    next(error);
+  }
+})
+
+app.post('/api/v1/register', async(req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const assignedToken = await createUser(username, password);
     res.send(assignedToken);
   } catch (error) {
     next(error);
