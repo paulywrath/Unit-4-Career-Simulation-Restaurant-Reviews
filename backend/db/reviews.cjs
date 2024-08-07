@@ -23,4 +23,13 @@ const getReviewsForRestaurant = async(restaurant_id) => {
   }
 }
 
-module.exports = { createReview, getReviewsForRestaurant }
+const getAvgScoreForRestaurant = async(restaurant_id) => {
+  try {
+    const { rows } = await client.query(`SELECT score FROM reviews WHERE restaurant_id=${restaurant_id};`)
+    return rows;
+  } catch (error) {
+    return(error);
+  }
+}
+
+module.exports = { createReview, getReviewsForRestaurant, getAvgScoreForRestaurant }
