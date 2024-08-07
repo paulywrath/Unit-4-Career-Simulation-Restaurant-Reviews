@@ -1,8 +1,17 @@
+const client = require('./db/client.cjs');
 const express = require('express');
 const app = express();
+const { getAllRestaurants } = require('./db/restaurants.cjs');
 
-app.get('/', function (req, res) {
-  res.send('Hello World')
+client.connect();
+
+app.get('/api/v1/allrestaurants', async(req, res, next) => {
+  try {
+    const allRestaurants = await getAllRestaurants();
+    res.send(allRestaurants);
+  } catch (error) {
+    next(error);
+  }
 })
 
 const PORT = process.env.PORT || 3000;
