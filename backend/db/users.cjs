@@ -6,12 +6,16 @@ const createUser = async(username, password) => {
   const encryptedPassword = await bcrypt.hash(password, 10);
   
   try {
-    await client.query(`
+    const { rows: [ user ] } = await client.query(`
       INSERT INTO users (username, password)
-      VALUES ('${username}', '${encryptedPassword}');
+      VALUES ('${username}', '${encryptedPassword}')
+      RETURNING *;
     `)
+
+    const assignedToken = jwt.sign({ userID: user.id }, process.env.JWT_SECRET);
+    return assignedToken;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
