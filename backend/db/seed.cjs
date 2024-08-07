@@ -18,7 +18,7 @@ const createTables = async() => {
       CREATE TABLE users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(30) NOT NULL UNIQUE,
-        password VARCHAR(50) NOT NULL
+        password VARCHAR(100) NOT NULL
         );
 
       CREATE TABLE restaurants (
